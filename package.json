@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "dev:backend": "cd backend && venv\\Scripts\\activate && python run.py",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  }
+}
