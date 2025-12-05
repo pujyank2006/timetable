@@ -19,4 +19,4 @@ def create_link(teacher_id):
     return jsonify({
         "success": True,
         "link": link
-    })
+})

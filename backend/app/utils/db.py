@@ -8,3 +8,4 @@ db = client["timetable"]
 
 subjects_collection = db["subjects"]
 teachers_collection = db["teachers"]
+availability_collection = db["availability"]

@@ -1,0 +1,13 @@
+studentgroups
+CS301 Math 3 Physics 3
+end
+teachers
+Alice_Jones Math
+Bob_Smith Physics
+Cathy_Liu English
+David_Chen CS_Lab
+end
+teacherunavailability
+Alice_Jones 0 7
+Bob_Smith 33 34
+end
