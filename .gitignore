@@ -298,6 +298,10 @@ FakesAssemblies/
 *.GhostDoc.xml
 
 # Node.js Tools for Visual Studio
+
+# Ignore plain-text input files that may contain sensitive data
+# This will ignore any file named `input.txt` anywhere in the repository
+**/input.txt
 .ntvs_analysis.dat
 node_modules/
 
