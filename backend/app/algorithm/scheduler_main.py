@@ -4,7 +4,7 @@ from typing import List, Optional, Any
 from chromosome import Chromosome
 from gene import Gene
 from time_table import TimeTable
-from utility import Utility 
+# from utility import Utility
 from input_data import InputData 
 import copy # Needed for deepClone equivalent
 
@@ -27,7 +27,7 @@ class SchedulerMain:
         
         # Use the actual loaded data and configuration
         self.config = config_data
-        self.utility = Utility() # Assuming Utility is instantiated/used correctly
+        # self.utility = Utility() # Assuming Utility is instantiated/used correctly
         
         # Instance attributes
         self.first_list: List['Chromosome'] = []
@@ -40,14 +40,14 @@ class SchedulerMain:
         print("Timetable scheduling started using Genetic Algorithm.")
         
         # 1. Print input data (Testing purpose)
-        self.utility.print_input_data(self.config)
+        # self.utility.print_input_data(self.config)
         
         # 2. Generating slots (Uses the actual TimeTable class)
         # NOTE: TimeTable constructor typically initializes the static TimeTable.slot
         TimeTable(self.config) 
         
         # 3. Printing slots (Testing purpose)
-        self.utility.print_slots(self.config, TimeTable)
+        # self.utility.print_slots(self.config, TimeTable)
         
         # 4. Initialising first generation of chromosomes
         self._initialise_population()
@@ -71,7 +71,7 @@ class SchedulerMain:
             
         # Sort the initial list (using the __lt__ method implemented in Chromosome)
         self.first_list.sort(reverse=True)
-        print("----------Initial Generation-----------\n")
+        # print("----------Initial Generation-----------\n")
         self._print_generation(self.first_list)
 
     def _create_new_generations(self):
@@ -110,7 +110,7 @@ class SchedulerMain:
                 self._custom_mutation(son)
                 
                 if son.fitness == 1.0:
-                    print("Selected Chromosome is:-")
+                    # print("Selected Chromosome is:-")
                     son.print_chromosome()
                     break # Solution found
                 
@@ -121,8 +121,8 @@ class SchedulerMain:
             # 3. Check for successful generation (fitness 1.0 found)
             if i < self.population_size:
                 
-                print("****************************************************************************************")
-                print(f"\n\nSuitable Timetable has been generated in the {i}th Chromosome of {nogenerations + 2} generation with fitness 1.")
+                # print("****************************************************************************************")
+                # print(f"\n\nSuitable Timetable has been generated in the {i}th Chromosome of {nogenerations + 2} generation with fitness 1.")
                 print("\nGenerated Timetable is:")
                 son.print_time_table()
                 SchedulerMain.final_son = son
@@ -133,7 +133,7 @@ class SchedulerMain:
             # Python's list.sort() is in-place
             self.first_list.sort(reverse=True) 
             
-            print(f"**************************      Generation{nogenerations + 2}      ********************************************\n")
+            # print(f"**************************      Generation{nogenerations + 2}      ********************************************\n")
             self._print_generation(self.first_list)
             nogenerations += 1
 
@@ -212,28 +212,28 @@ class SchedulerMain:
 	
     # --- Printing and Utility Methods ---
 
-    def _print_generation(self, list: List['Chromosome']):
-        """Prints important details of a generation (top 4, and specific indices)."""
+    # def _print_generation(self, list: List['Chromosome']):
+    #     """Prints important details of a generation (top 4, and specific indices)."""
         
-        print("Fetching details from this generation...\n")	
-        
-        # Print only initial 4 chromosomes of sorted list
-        for i in range(min(4, len(list))):
-            print(f"Chromosome no.{i}: {list[i].get_fitness()}")
-            list[i].print_chromosome()
-            print("")
-        
-        index_10_percent = self.population_size // 10
-        index_20_percent = self.population_size // 5
+    #     # print("Fetching details from this generation...\n")	
 
-        if index_10_percent + 1 < len(list):
-            print(f"Chromosome no. {index_10_percent + 1} :{list[index_10_percent + 1].get_fitness()}\n")
+    #     # Print only initial 4 chromosomes of sorted list
+    #     for i in range(min(4, len(list))):
+    #         # print(f"Chromosome no.{i}: {list[i].get_fitness()}")
+    #         list[i].print_chromosome()
+    #         # print("")
         
-        if index_20_percent + 1 < len(list):
-            print(f"Chromosome no. {index_20_percent + 1} :{list[index_20_percent + 1].get_fitness()}\n")
+    #     index_10_percent = self.population_size // 10
+    #     index_20_percent = self.population_size // 5
 
-        if list:
-            print(f"Most fit chromosome from this generation has fitness = {list[0].get_fitness()}\n")
+    #     if index_10_percent + 1 < len(list):
+    #         print(f"Chromosome no. {index_10_percent + 1} :{list[index_10_percent + 1].get_fitness()}\n")
+        
+    #     if index_20_percent + 1 < len(list):
+    #         print(f"Chromosome no. {index_20_percent + 1} :{list[index_20_percent + 1].get_fitness()}\n")
+
+    #     if list:
+    #         print(f"Most fit chromosome from this generation has fitness = {list[0].get_fitness()}\n")
     
     
     def select_parent_best(self, list: List['Chromosome']) -> 'Chromosome':

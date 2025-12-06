@@ -79,7 +79,7 @@ class TimeTable:
                         hour_count = 1
                         subject_no += 1
         
-        print(f"TimeTable initialized. Generated {k} total slots/free periods.")
+        # print(f"TimeTable initialized. Generated {k} total slots/free periods.")
 
     # 2. Static Method Equivalent
     @staticmethod

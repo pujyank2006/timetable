@@ -27,7 +27,7 @@ class Gene:
         """
         self.days = config.daysperweek
         self.hours = config.hoursperday
-        print(self.days)
+        # print(self.days)
         self.total_slots = self.days * self.hours
         
         self.slotno: List[int] = [0] * self.total_slots
@@ -62,8 +62,8 @@ class Gene:
         # Replacing Java's serialization clone with Python's standard library
         return copy.deepcopy(self)
     
-    def print_raw_gene(self):
+    # def print_raw_gene(self):
         """
         Helper method to display the raw slot indices (for debugging).
         """
-        print(f"Slot Indices: {self.slotno}")
+        # print(f"Slot Indices: {self.slotno}")

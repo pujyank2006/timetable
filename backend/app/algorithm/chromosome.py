@@ -151,7 +151,7 @@ class Chromosome:
         """
         for i in range(self.nostgrp):
             raw_gene_data = [str(self.gene[i].slotno[j]) for j in range(self.total_slots)]
-            print(" ".join(raw_gene_data))
+            # print(" ".join(raw_gene_data))
         
     # --- Comparison Method (for sorting) ---
 
