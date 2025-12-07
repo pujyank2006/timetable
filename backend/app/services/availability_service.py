@@ -1,8 +1,9 @@
-from app.utils.db import availability_collection
 from flask import request, jsonify
-from app.schema.availability_schema import Availability
 from pydantic import ValidationError
 from bson import ObjectId
+
+from app.utils.db import availability_collection
+from app.schema.availability_schema import Availability
 
 def post_availability_service():
     try:

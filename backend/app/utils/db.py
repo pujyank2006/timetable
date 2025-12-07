@@ -6,6 +6,7 @@ load_dotenv()
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["timetable"]
 
-subjects_collection = db["subjects"]
+classes_collection = db["classes"]
 teachers_collection = db["teachers"]
 availability_collection = db["availability"]
+time_table_collection = db["time_table"]

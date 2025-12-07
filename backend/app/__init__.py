@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+
 from app.config import Config
-from app.controllers.subject_controller import subject_bp
+from app.controllers.class_controller import class_bp
 from app.controllers.teacher_controller import teacher_bp
 from app.controllers.availability_controller import availability_bp
 from app.controllers.login_controller import user_bp
@@ -22,8 +23,8 @@ def create_app():
     # Route for users/login
     app.register_blueprint(user_bp, url_prefix="/users")
 
-    # Route for subjects
-    app.register_blueprint(subject_bp, url_prefix="/api")
+    # Route for classes
+    app.register_blueprint(class_bp, url_prefix="/api")
 
     # Route for teachers
     app.register_blueprint(teacher_bp, url_prefix="/api")

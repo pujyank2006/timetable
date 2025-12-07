@@ -23,9 +23,9 @@ def login():
         access_token = create_access_token(identity="admin")
         
         return jsonify({
-            "message": "Login successful",
-            "token": access_token,
-            "user": "admin"
+            "": "Login successful",
+            "user": "admin",
+            "token": access_token
         }), 200
         
     except Exception as e:

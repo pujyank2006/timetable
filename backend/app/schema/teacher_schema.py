@@ -7,4 +7,5 @@ class Teacher(BaseModel):
     department: str
     email: str
     phone: str
+    subjects: List[str]
     link_token: Optional[str] = None

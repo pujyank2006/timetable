@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, current_app # <-- Import current_app
+from flask import Blueprint, jsonify, current_app
 from app.services.availability_service import post_availability_service
 from app.utils.db import availability_collection
 
@@ -11,12 +11,7 @@ def post_availability():
 @availability_bp.get("/all")
 def get_all_availability():
     records = list(availability_collection.find())
-
     for r in records:
         r["_id"] = str(r["_id"]) 
 
     return jsonify(records), 200
-
-@availability_bp.get("/<teacher_id>")
-def get_availability(teacher_id):
-    return current_app.send_static_file('availability.html')

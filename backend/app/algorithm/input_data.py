@@ -2,13 +2,10 @@ import os
 from typing import List, Any
 import random 
 import re 
-# Assuming external classes are available (replace with actual imports)
-from student_group import StudentGroup
-from teacher import Teacher
 
-# --- Placeholder Classes for Dependencies (if needed for isolated testing) ---
-# NOTE: Delete these placeholders if your environment can correctly import 
-# the actual StudentGroup and Teacher classes from their modules.
+from app.algorithm.student_group import StudentGroup
+from app.algorithm.teacher import Teacher
+
 class StudentGroup:
     def __init__(self):
         self.id = 0
@@ -25,16 +22,9 @@ class Teacher:
         self.subject = ""
         self.assigned = 0 
         self.unavailable_slots: List[int] = [] 
-# -------------------------------------------------------------------
-
 
 class InputData:
-    """
-    Handles initialization of configuration constants and loads scheduling 
-    data (Student Groups, Teachers) from an input file.
-    """
     
-    # Class Variables (accessed statically, equivalent to Java's public static fields)
     student_group: List[StudentGroup]
     teacher: List[Teacher]
     
@@ -48,28 +38,21 @@ class InputData:
     MAX_SIZE = 100 
     
     def __init__(self, input_file_path: str = "input.txt"):
-        """Initializes data arrays and loads data from the specified file."""
-        
-        # Initialize static/class lists
         InputData.student_group = [] 
         InputData.teacher = []
         
         self.input_file_path = input_file_path
         
-        # NEW: Temporary storage for unavailability data
+        
         self.unavailability_data = {} 
         
-        # Execute data loading, assignment, and final merge
-        self._take_input()
-        self._assign_teacher() # Assigns subject teachers based on load
-        self._merge_unavailability_data() # NEW: Assigns off-times
-    
-    # --- Data Loading (Modified to save unavailability data temporarily) ---
-
-    def _take_input(self):
-        """ Loads scheduling data from the input file. """
         
-        # Hardcoded values for development (as per Java)
+        self._take_input()
+        self._assign_teacher() 
+        self._merge_unavailability_data() 
+    
+    def _take_input(self):
+    
         InputData.hoursperday = 7
         InputData.daysperweek = 5
 
@@ -87,8 +70,7 @@ class InputData:
                 line = line.strip()
                 if not line:
                     continue
-                
-                # --- Mode Transitions ---
+        
                 if line.lower() == "studentgroups":
                     mode = "studentgroups"; continue
                 elif line.lower() == "teachers":
@@ -97,11 +79,9 @@ class InputData:
                     mode = "unavailability"; continue
                 elif line.lower() == "end":
                     mode = None; continue
-                
-                # --- Data Parsing Logic ---
-                
+
                 if mode == "teachers":
-                    # This section CREATES the Teacher objects
+                    
                     parts = line.split()
                     if len(parts) < 2: continue
 
@@ -114,7 +94,7 @@ class InputData:
                     teacher_index += 1
                 
                 elif mode == "studentgroups":
-                    # This section CREATES StudentGroup objects
+                    
                     parts = line.split()
                     if not parts: continue
                         
@@ -125,9 +105,20 @@ class InputData:
                     j = 0
                     subject_data = parts[1:]
                     for sub, hrs in zip(subject_data[::2], subject_data[1::2]):
-                        if j < 10: # Use fixed size 10 (or MAX_SIZE)
+                        if j < 10: 
                             sg.subject[j] = sub
-                            sg.hours[j] = int(hrs)
+                            try:
+                                hrs_int = int(hrs)
+                            except ValueError:
+                                hrs_int = 0
+
+                            
+                            
+                            if sub.lower().endswith('_lab') and hrs_int == 1:
+                                sg.hours[j] = 2
+                            else:
+                                sg.hours[j] = hrs_int
+
                             j += 1
                         
                     sg.nosubject = j
@@ -135,30 +126,25 @@ class InputData:
                     student_group_index += 1
                     
                 elif mode == "unavailability":
-                    # This section SAVES data temporarily
+                    
                     parts = line.split()
                     if len(parts) < 2: continue
                         
                     teacher_name = parts[0]
                     slot_indices = [int(p) for p in parts[1:]] 
                     
-                    # SAVE TO DICTIONARY INSTEAD OF ASSIGNING IMMEDIATELY
+                    
                     self.unavailability_data[teacher_name.lower()] = slot_indices
                     
-            # Update static counters after reading
+            
             InputData.nostudentgroup = len(InputData.student_group)
             InputData.noteacher = len(InputData.teacher)
             
         except FileNotFoundError:
             print(f"Error: Input file not found at {file_path}")
 
-    # --- NEW: Final Merge Method ---
+    
     def _merge_unavailability_data(self):
-        """
-        Assigns the loaded unavailability data from the temporary dict to the Teacher objects.
-        This runs AFTER all Teacher objects are created.
-        """
-        
         for teacher in InputData.teacher:
             teacher_name_lower = teacher.name.lower()
             
@@ -167,14 +153,9 @@ class InputData:
                     self.unavailability_data[teacher_name_lower]
                 )
     
-    # --- Assignment Logic (Load Balancing) ---
+    
 
     def _assign_teacher(self):
-        """
-        Assigns the appropriate teacher ID to each subject required by a student group 
-        using a simple load-balancing mechanism.
-        """
-
         for sg in InputData.student_group:
             for j in range(sg.nosubject):
                 
