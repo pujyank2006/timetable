@@ -30,7 +30,7 @@ def create_and_send__link():
         return jsonify({"error": f"Teacher with ID {teacher_id} not found or email is missing."}), 404
     
     try:
-        send_email(teacher_email, token)
+        send_email(teacher_email, token, teacher_id)
     except Exception as e:
         return jsonify({"error": f"Failed to send email: {str(e)}"}), 500
 

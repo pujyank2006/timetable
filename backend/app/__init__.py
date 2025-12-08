@@ -7,21 +7,29 @@ from app.controllers.class_controller import class_bp
 from app.controllers.teacher_controller import teacher_bp
 from app.controllers.availability_controller import availability_bp
 from app.controllers.login_controller import user_bp
+from app.controllers.logout_controller import logout_bp
+from app.controllers.getTimeTable_controller import getTimeTable_bp
 from app.algorithm.time_table_generation_controller import generation_bp
+
 
 def create_app():
     app = Flask(__name__)
-    
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-    # Load configuration
-    app.config['JWT_SECRET_KEY'] = Config.JWT_SECRET_KEY
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = Config.JWT_ACCESS_TOKEN_EXPIRES
+    app.config.from_object(Config)
+    # Allow CORS from the frontend, include Authorization header and OPTIONS method
+    CORS(
+        app,
+        resources={r"/*": {"origins": "http://localhost:3000"}},
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        supports_credentials=True
+    )
     
     # Initialize JWT
     jwt = JWTManager(app)
 
-    # Route for users/login
+    # Route for users/login or logout
     app.register_blueprint(user_bp, url_prefix="/users")
+    app.register_blueprint(logout_bp, url_prefix="/user")
 
     # Route for classes
     app.register_blueprint(class_bp, url_prefix="/api")
@@ -35,4 +43,6 @@ def create_app():
     # Route for time table generation
     app.register_blueprint(generation_bp, url_prefix="/generate")
     
+    # Route for getting time table
+    app.register_blueprint(getTimeTable_bp, url_prefix="/get")
     return app

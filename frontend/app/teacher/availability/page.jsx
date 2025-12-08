@@ -1,22 +1,39 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const hours = ["9-10", "10-11", "11-12", "12-1", "2-3", "3-4", "4-5"];
 
-const getTokenFromUrl = () => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('token'); 
+const API_BASE = "http://localhost:5000";
+
+// UPDATED FUNCTION: Handles standard '&' and non-standard '?' separators
+const getTeacherIdFromUrl = () => {
+    if (typeof window !== "undefined") {
+        const search = window.location.search;
+        
+        // 1. Try standard parsing first
+        const params = new URLSearchParams(search);
+        let id = params.get('teacher_id');
+
+        // 2. Fallback: Manually parse if URL is malformed like "?token=...?teacher_id=..."
+        if (!id && search.includes('teacher_id=')) {
+            // Split by 'teacher_id=' and take the part after it
+            const parts = search.split('teacher_id=');
+            if (parts.length > 1) {
+                // If there are more params after (separated by &), remove them
+                id = parts[1].split('&')[0];
+            }
+        }
+        
+        return id;
+    }
+    return null;
 };
 
 const styles = {
-    body: {
-        fontFamily: 'Arial',
-        margin: '20px',
-    },
-    day: {
-        margin: '20px 0',
-    },
+    body: { fontFamily: 'Arial', margin: '20px' },
+    day: { margin: '20px 0' },
     slot: {
         display: 'inline-block',
         padding: '10px',
@@ -25,17 +42,9 @@ const styles = {
         borderRadius: '6px',
         cursor: 'pointer',
     },
-    selected: {
-        background: '#ff7675',
-        color: 'white',
-    },
-    button: {
-        marginTop: '20px',
-        padding: '10px 20px',
-        fontSize: '16px',
-    }
+    selected: { background: '#ff7675', color: 'white' },
+    button: { marginTop: '20px', padding: '10px 20px', fontSize: '16px', background: '#75afffff', borderRadius: '20px'}
 };
-
 
 const TeacherAvailability = () => {
     const [unavailability, setUnavailability] = useState(() => {
@@ -45,46 +54,56 @@ const TeacherAvailability = () => {
         });
         return initial;
     });
-    
-    const [token, setToken] = useState(null);
+
+    const [teacherId, setTeacherId] = useState(null);
+
     useEffect(() => {
-        setToken(getTokenFromUrl());
+        const id = getTeacherIdFromUrl();
+        console.log("Extracted Teacher ID:", id); // Debug log to verify extraction
+        setTeacherId(id);
     }, []);
 
-
     const handleSlotClick = (dayName, index) => {
-        setUnavailability(prevUnavailability => {
-            const newDaySlots = [...prevUnavailability[dayName]];
+        setUnavailability(prev => {
+            const newDaySlots = [...prev[dayName]];
             newDaySlots[index] = newDaySlots[index] === 0 ? 1 : 0;
-            
-            return {
-                ...prevUnavailability,
-                [dayName]: newDaySlots,
-            };
+            return { ...prev, [dayName]: newDaySlots };
         });
     };
 
     const submitData = () => {
-        if (!token) {
-            alert("Error: Missing token. Cannot submit availability.");
+        if (!teacherId) {
+            alert("Error: Missing teacher_id in URL. Cannot submit.");
             return;
         }
 
+        const selectedSlots = [];
+        days.forEach((day, dayIndex) => {
+            const daySlots = unavailability[day];
+            daySlots.forEach((isSelected, hourIndex) => {
+                if (isSelected === 1) {
+                    const flatIndex = (dayIndex * hours.length) + hourIndex;
+                    selectedSlots.push(flatIndex);
+                }
+            });
+        });
+
         const payload = {
-            token: token,
-            availability: unavailability,
-            submitted: true
+            teacher_id: teacherId, 
+            slots: selectedSlots, 
+            submitted: true 
         };
 
-        fetch("/availability/submit", {
+        console.log("Submitting payload:", payload);
+
+        fetch(`${API_BASE}/availability/submit`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify(payload)
         })
         .then(res => {
-            if (!res.ok) {
-                return res.json().then(err => Promise.reject(err));
-            }
+            if (!res.ok) return res.json().then(err => Promise.reject(err));
             return res.json();
         })
         .then(data => {
@@ -97,14 +116,14 @@ const TeacherAvailability = () => {
         });
     };
 
-
     return (
         <div style={styles.body}>
             <h2>Mark Your NOT-AVAILABLE Hours</h2>
-            {token ? (
-                <p>Token: {token}</p>
+            <h3>Consider the recently released timetable</h3>
+            {teacherId ? (
+                <p>Teacher ID: <strong>{teacherId}</strong></p>
             ) : (
-                <p style={{color: 'red'}}>Loading token...</p>
+                <p style={{ color: 'red' }}>Loading ID from URL...</p>
             )}
 
             <div id="container">
@@ -117,9 +136,9 @@ const TeacherAvailability = () => {
                                 ...styles.slot,
                                 ...(isSelected ? styles.selected : {})
                             };
-                            
+
                             return (
-                                <div 
+                                <div
                                     key={hourIndex}
                                     style={slotStyle}
                                     onClick={() => handleSlotClick(dayName, hourIndex)}
@@ -131,13 +150,13 @@ const TeacherAvailability = () => {
                     </div>
                 ))}
             </div>
-            
-            <button 
-                style={styles.button} 
+
+            <button
+                style={styles.button}
                 onClick={submitData}
-                disabled={!token}
+                disabled={!teacherId}
             >
-                Submit
+                Submit Availability
             </button>
         </div>
     );

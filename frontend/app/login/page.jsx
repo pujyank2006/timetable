@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const API_BASE = "http://localhost:5000";
+
 export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -15,11 +17,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:5000/users/login", {
+            const response = await fetch(`${API_BASE}/users/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify({ password }),
             });
 
@@ -29,8 +32,7 @@ export default function LoginPage() {
             }
 
             const data = await response.json();
-            localStorage.setItem("authToken", data.token);
-            router.push("/createTimetable");
+            router.push("/dashboard");
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {
@@ -69,7 +71,7 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        disabled={ loading }
+                        disabled={loading}
                         className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg transition duration-200"
                     >
                         {loading ? "Logging in..." : "Login"}

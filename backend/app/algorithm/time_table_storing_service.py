@@ -19,4 +19,3 @@ def store_time_table(timetable_dict: Dict[str, Any]) -> Dict[str, Any]:
             summary["errors"][class_id] = str(ex)
 
     return summary
-
