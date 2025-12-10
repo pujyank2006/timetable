@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -31,14 +31,12 @@ export default function LoginPage() {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Invalid password");
             }
-
-            const data = await response.json();
-            router.push("/dashboard");
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
+        redirect('/dashboard');
     };
 
     return (
