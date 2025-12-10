@@ -41,7 +41,7 @@ def login():
             value=access_token,
             max_age=7 * 24 * 60 * 60, # 7 days (should match your token expiry)
             httponly=True,  # CRITICAL: Prevents XSS attacks (JS cannot read this)
-            secure=False,   # Set to True if using HTTPS (Production), False for Localhost
+            secure=True,   # Set to True if using HTTPS (Production), False for Localhost
             samesite="Lax", # CRITICAL: Prevents CSRF (Cookie only sent on nav)
             path="/"        # Available across the whole app
         )
