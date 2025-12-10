@@ -18,7 +18,8 @@ def create_app():
     # Allow CORS from the frontend, include Authorization header and OPTIONS method
     CORS(
         app,
-        resources={r"/*": {"origins": ["http://localhost:3000", "https://timetable-tt-tau.vercel.app"], "supports_credentials": True}},
+        resources={r"/*": {"origins": ["http://localhost:3000", "https://timetable-tt-tau.vercel.app"]}},
+        "supports_credentials": True,
         allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
