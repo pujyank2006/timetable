@@ -5,7 +5,7 @@ function isAuthenticated(request) {
   return request.cookies.has('access_token_cookie');
 }
 
-export function proxy(request) {
+export function middleware(request) {
   const isAuth = isAuthenticated(request);
   const pathname = request.nextUrl.pathname;
 
