@@ -23,7 +23,7 @@ def login():
         
         # 1. Create the token
         access_token = create_access_token(identity="admin")
-        
+        print(acces_token)
         # 2. Create a response object (but don't return it yet)
         # notice we DO NOT send the 'token' in this JSON body anymore
         # Also include the token in the JSON response so a same-origin frontend
@@ -38,7 +38,7 @@ def login():
         # This cookie cannot be accessed by client-side JavaScript (HttpOnly)
         response.set_cookie(
             "access_token_cookie",  # Default name expected by Flask-JWT-Extended
-            value=access_token_cookie,
+            value=access_token,
             max_age=7 * 24 * 60 * 60, # 7 days (should match your token expiry)
             httponly=True,  # CRITICAL: Prevents XSS attacks (JS cannot read this)
             secure=True,   # Set to True if using HTTPS (Production), False for Localhost
