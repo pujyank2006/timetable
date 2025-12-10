@@ -38,7 +38,7 @@ def login():
         # This cookie cannot be accessed by client-side JavaScript (HttpOnly)
         response.set_cookie(
             "access_token_cookie",  # Default name expected by Flask-JWT-Extended
-            value=access_token,
+            value=access_token_cookie,
             max_age=7 * 24 * 60 * 60, # 7 days (should match your token expiry)
             httponly=True,  # CRITICAL: Prevents XSS attacks (JS cannot read this)
             secure=True,   # Set to True if using HTTPS (Production), False for Localhost

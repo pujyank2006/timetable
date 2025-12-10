@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 function isAuthenticated(request) {
+  console.log(request.cookies.has('access_token_cookie'))
   return request.cookies.has('access_token_cookie');
 }
 
