@@ -1,7 +1,17 @@
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { cookies } from 'next/headers';
 
+
+const cookieStore = cookies();
+const sessionCookie = cookieStore.get('access_token_cookie')?.value;
+const router = useRouter();
+
+if(!sessionCookie){
+  router.push('/login');
+}
+
+"use client";
+import { useEffect, useState } from "react";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function CreateTimetablePage() {
@@ -11,13 +21,6 @@ export default function CreateTimetablePage() {
   const [availabilityMap, setAvailabilityMap] = useState({});
   const [slots, setSlots] = useState([]);
 
-  const cookieStore = cookies();
-  const sessionCookie = cookieStore.get('access_token_cookie')?.value;
-  const router = useRouter();
-
-  if(!sessionCookie){
-    router.push('/login');
-  }
 
   useEffect(() => {
     const fetchClasses = async () => {
