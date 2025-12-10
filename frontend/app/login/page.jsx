@@ -31,12 +31,12 @@ export default function LoginPage() {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Invalid password");
             }
+            router.push('/dashboard');
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
-        redirect('/dashboard');
     };
 
     return (
