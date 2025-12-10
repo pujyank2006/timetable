@@ -26,6 +26,10 @@ def create_app():
     # Initialize JWT
     jwt = JWTManager(app)
 
+    @app.route("/")
+    def home():
+        return "Hello from Flask on Vercel!"
+
     # Route for users/login or logout
     app.register_blueprint(user_bp, url_prefix="/users")
     app.register_blueprint(logout_bp, url_prefix="/user")
