@@ -6,4 +6,4 @@ Werkzeug==2.3.0
 gunicorn==20.1.0
 pymongo==4.6.1
 dnspython==2.6.1
-yagmail==0.15.259
+yagmail==0.15.253
