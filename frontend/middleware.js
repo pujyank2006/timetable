@@ -1,44 +1,44 @@
-import { NextResponse } from 'next/server';
+// import { NextResponse } from 'next/server';
 
-function isAuthenticated(request) {
-  console.log(request.cookies.has('access_token_cookie'))
-  return request.cookies.has('access_token_cookie');
-}
+// function isAuthenticated(request) {
+//   console.log(request.cookies.has('access_token_cookie'))
+//   return request.cookies.has('access_token_cookie');
+// }
 
-export function middleware(request) {
-  const isAuth = isAuthenticated(request);
-  const pathname = request.nextUrl.pathname;
+// export function middleware(request) {
+//   const isAuth = isAuthenticated(request);
+//   const pathname = request.nextUrl.pathname;
 
-  const protectedRoutes = [
-    '/dashboard',
-    '/createTimetable',
-    '/viewTimetable'
-  ];
+//   const protectedRoutes = [
+//     '/dashboard',
+//     '/createTimetable',
+//     '/viewTimetable'
+//   ];
 
-  const publicOnlyRoutes = [
-    '/',       
-    '/login'
-  ];
+//   const publicOnlyRoutes = [
+//     '/',       
+//     '/login'
+//   ];
 
-  if (protectedRoutes.includes(pathname) && !isAuth) {
-    const loginUrl = new URL('/login', request.url);
-    return NextResponse.redirect(loginUrl);
-  }
+//   if (protectedRoutes.includes(pathname) && !isAuth) {
+//     const loginUrl = new URL('/login', request.url);
+//     return NextResponse.redirect(loginUrl);
+//   }
 
-  if (publicOnlyRoutes.includes(pathname) && isAuth) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
+//   if (publicOnlyRoutes.includes(pathname) && isAuth) {
+//     return NextResponse.redirect(new URL('/dashboard', request.url));
+//   }
 
-  return NextResponse.next();
-}
+//   return NextResponse.next();
+// }
 
-export const config = {
+// export const config = {
   
-  matcher: [
-    '/', 
-    '/login', 
-    '/dashboard', 
-    '/createTimetable', 
-    '/viewTimetable'
-  ],
-};
+//   matcher: [
+//     '/', 
+//     '/login', 
+//     '/dashboard', 
+//     '/createTimetable', 
+//     '/viewTimetable'
+//   ],
+// };

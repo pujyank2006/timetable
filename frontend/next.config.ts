@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  basePath: '/time-table-app',
+  // code here
 };
 
 export default nextConfig;
