@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const API_BASE = process.env.API_BASE_URL;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function CreateTimetablePage() {
   const [classes, setClasses] = useState([]);

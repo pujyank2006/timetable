@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const API_BASE = process.env.API_BASE_URL;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function LoginPage() {
     const [password, setPassword] = useState("");
@@ -15,6 +15,7 @@ export default function LoginPage() {
         e.preventDefault();
         setError("");
         setLoading(true);
+        console.log("API_BASE:", API_BASE);
 
         try {
             const response = await fetch(`${API_BASE}/users/login`, {
