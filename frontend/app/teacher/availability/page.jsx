@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const hours = ["9-10", "10-11", "11-12", "12-1", "2-3", "3-4", "4-5"];
 
-const API_BASE = process.env.API_BASE_URL || "http://localhost:5000";
+const API_BASE = process.env.API_BASE_URL;
 
 // UPDATED FUNCTION: Handles standard '&' and non-standard '?' separators
 const getTeacherIdFromUrl = () => {
