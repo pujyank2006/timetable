@@ -24,9 +24,7 @@ export function middleware(request) {
   if (path === '/' && token) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
-  const response = NextResponse.next();
-  response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
