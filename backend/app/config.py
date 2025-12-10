@@ -6,32 +6,31 @@ load_dotenv()
 
 class Config:
     # --- JWT Configuration ---
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'dev-secret-key') # Fallback for safety
+    
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+    if not JWT_SECRET_KEY:
+        raise ValueError("Missing JWT_SECRET_KEY environment variable!")
+    
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
-    
-    # 1. Tell Flask-JWT to read tokens from cookies
+
+    # Token stored in cookies
     JWT_TOKEN_LOCATION = ["cookies"]
+
+    # Cookie settings
+    JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"   # HTTPS only in prod
+    JWT_COOKIE_SAMESITE = "None"                                # Required for cross-domain cookies
     
-    # 2. Cookie Security Settings
-    # True = Cookies only sent over HTTPS (Production)
-    # False = Cookies sent over HTTP (Localhost)
-    # We check if FLASK_ENV is 'production' to auto-set this, or default to False
-    JWT_COOKIE_SECURE = os.getenv('FLASK_ENV') == 'production'
+    # Disable for simplicity (enable later for security)
+    JWT_COOKIE_CSRF_PROTECT = False
     
-    # 3. CSRF Protection
-    # For high security, this should be True, but it requires extra frontend setup (CSRF headers).
-    # Setting to False simplifies the implementation for now.
-    JWT_COOKIE_CSRF_PROTECT = False 
-    
-    # 4. Name of the cookie containing the access token
     JWT_ACCESS_COOKIE_NAME = "access_token_cookie"
 
     # --- App Configuration ---
-    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
     
-    # Defaults for timetable slots (used for availability validation)
-    SLOTS_PER_DAY = int(os.getenv('SLOTS_PER_DAY', '7'))
-    DAYS_PER_WEEK = int(os.getenv('DAYS_PER_WEEK', '5'))
+    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+    if not ADMIN_PASSWORD:
+        raise ValueError("Missing ADMIN_PASSWORD environment variable!")
     
-    # Fraction (0-1] of total slots a teacher may mark unavailable.
-    MAX_UNAVAILABLE_FRACTION = float(os.getenv('MAX_UNAVAILABLE_FRACTION', '0.95'))
+    SLOTS_PER_DAY = int(os.getenv("SLOTS_PER_DAY", "7"))
+    DAYS_PER_WEEK = int(os.getenv("DAYS_PER_WEEK", "5"))
+    MAX_UNAVAILABLE_FRACTION = float(os.getenv("MAX_UNAVAILABLE_FRACTION", "0.95"))
