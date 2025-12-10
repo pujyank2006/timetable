@@ -23,7 +23,6 @@ def login():
         
         # 1. Create the token
         access_token = create_access_token(identity="admin")
-        print(acces_token)
         # 2. Create a response object (but don't return it yet)
         # notice we DO NOT send the 'token' in this JSON body anymore
         # Also include the token in the JSON response so a same-origin frontend
