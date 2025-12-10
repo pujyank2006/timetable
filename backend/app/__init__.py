@@ -19,7 +19,7 @@ def create_app():
     CORS(
         app,
         resources={r"/*": {"origins": ["http://localhost:3000", "https://timetable-tt-tau.vercel.app"]}},
-        "supports_credentials": True,
+        supports_credentials= True,
         allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
