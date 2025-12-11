@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, make_response
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, unset_jwt_cookies
 
 logout_bp = Blueprint("logout", __name__)
 
