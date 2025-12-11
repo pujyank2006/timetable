@@ -1,4 +1,5 @@
 import json
+import os
 from flask import request, jsonify
 from pydantic import ValidationError
 
@@ -33,7 +34,7 @@ def transform_input():
     output.append("end")
 
     try: 
-        INPUT_FILE_PATH = "input.txt"
+        INPUT_FILE_PATH = "/tmp/input.txt"
         with open(INPUT_FILE_PATH, "w") as f:
             f.write("\n".join(output))
         return True

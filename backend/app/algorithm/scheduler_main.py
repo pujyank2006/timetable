@@ -175,5 +175,5 @@ class SchedulerMain:
         c.get_fitness() 
 
 if __name__ == "__main__":
-    config_data = InputData("input.txt") 
+    config_data = InputData("/tmp/input.txt") 
     SchedulerMain(config_data)
