@@ -7,13 +7,7 @@ from app.utils.db import availability_collection
 availability_bp = Blueprint("availability", __name__)
 
 @availability_bp.post("/submit")
-@jwt_required()
 def post_availability():
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsnoify({
-            "message": "No user"
-        })
     return post_availability_service()
 
 @availability_bp.get("/all")
