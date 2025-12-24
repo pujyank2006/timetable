@@ -1,6 +1,6 @@
-"use client";
 import { useEffect, useState } from "react";
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function CreateTimetablePage() {
   const [classes, setClasses] = useState([]);
@@ -9,12 +9,11 @@ export default function CreateTimetablePage() {
   const [availabilityMap, setAvailabilityMap] = useState({});
   const [slots, setSlots] = useState([]);
 
-
   useEffect(() => {
     const fetchClasses = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/classes`, {
-          credentials: 'include'
+          credentials: "include",
         });
 
         if (!res.ok) {
@@ -34,7 +33,7 @@ export default function CreateTimetablePage() {
     const fetchTeachers = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/teachers`, {
-          credentials: 'include'
+          credentials: "include",
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -48,7 +47,7 @@ export default function CreateTimetablePage() {
     const fetchAvailability = async () => {
       try {
         const res = await fetch(`${API_BASE}/availability/all`, {
-          credentials: 'include'
+          credentials: "include",
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -78,7 +77,8 @@ export default function CreateTimetablePage() {
     const cls = classes.find((c) => getDisplayName(c) === selectedClass);
     if (!cls) return [];
 
-    const subjectsField = cls.subjects ?? cls.subject_list ?? cls.subjects_list ?? cls.subjectsMap ?? cls.subjectMap ?? cls.subjectsObj;
+    const subjectsField =
+      cls.subjects ?? cls.subject_list ?? cls.subjects_list ?? cls.subjectsMap ?? cls.subjectMap ?? cls.subjectsObj;
     if (!subjectsField) {
       if (Array.isArray(cls.subject)) return cls.subject;
       if (typeof cls.subject === "string") return cls.subject.split(/,\s*/).filter(Boolean);
@@ -108,7 +108,8 @@ export default function CreateTimetablePage() {
     return teachers.filter((t) => {
       const subjField = t.subject ?? t.subjects ?? t.teaches ?? null;
       if (!subjField) return false;
-      if (Array.isArray(subjField)) return subjField.some((s) => String(s).toLowerCase() === String(subject).toLowerCase());
+      if (Array.isArray(subjField))
+        return subjField.some((s) => String(s).toLowerCase() === String(subject).toLowerCase());
       return String(subjField).toLowerCase() === String(subject).toLowerCase();
     });
   }
@@ -118,9 +119,7 @@ export default function CreateTimetablePage() {
   }
 
   function generateTimetableJSON() {
-    const selectedTeacherIds = new Set(
-      slots.map(s => s.teacherId).filter(id => id && id !== "")
-    );
+    const selectedTeacherIds = new Set(slots.map((s) => s.teacherId).filter((id) => id && id !== ""));
 
     const subjectsMap = {};
     slots.forEach((slot) => {
@@ -134,7 +133,7 @@ export default function CreateTimetablePage() {
       },
     ];
 
-    const filteredTeachers = teachers.filter(t => selectedTeacherIds.has(getTeacherId(t)));
+    const filteredTeachers = teachers.filter((t) => selectedTeacherIds.has(getTeacherId(t)));
 
     const teachersList = filteredTeachers.map((t) => {
       const subjRaw = t.subject ?? t.subjects ?? t.teaches ?? "";
@@ -147,10 +146,10 @@ export default function CreateTimetablePage() {
     });
 
     const teacherUnavailability = Object.values(availabilityMap)
-      .filter(rec => selectedTeacherIds.has(String(rec.teacher_id)))
+      .filter((rec) => selectedTeacherIds.has(String(rec.teacher_id)))
       .map((rec) => {
         const tObj = teachers.find((t) => String(t.id) === String(rec.teacher_id));
-        const tName = tObj ? (tObj.name ?? tObj.fullname) : (rec.name ?? rec.teacher_id);
+        const tName = tObj ? tObj.name ?? tObj.fullname : rec.name ?? rec.teacher_id;
 
         return {
           name: tName,
@@ -165,7 +164,6 @@ export default function CreateTimetablePage() {
     };
 
     console.log("Generated JSON:", JSON.stringify(payload, null, 2));
-    // alert("JSON generated! Check the console.");
     return payload;
   }
 
@@ -176,7 +174,7 @@ export default function CreateTimetablePage() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -188,7 +186,6 @@ export default function CreateTimetablePage() {
       const result = await res.json();
       console.log("Timetable generated successfully:", result);
       alert("Timetable generation started successfully!");
-
     } catch (err) {
       console.error("Failed to submit timetable configuration:", err);
       alert(`Error submitting data: ${err.message}`);
@@ -226,25 +223,20 @@ export default function CreateTimetablePage() {
               <li className="text-sm text-slate-500">No subjects found for selected class</li>
             )}
             {getSubjectsForSelected().map((subj, i) => {
-              // 1. Find the specific slot data for THIS subject
               const slot = slots.find((s) => s.subject === subj);
               const teacherId = slot?.teacherId;
 
               return (
                 <li key={i} className="bg-white p-2 shadow rounded-xl flex justify-between items-center">
-                  {/* Subject Name */}
                   <span className="font-medium text-slate-700">{subj}</span>
 
-                  {/* Status for this specific subject's teacher */}
                   <div className="min-w-[120px] text-sm flex justify-end">
                     {teacherId ? (
                       (() => {
                         const rec = availabilityMap[String(teacherId)];
-                        // Check if record exists and submitted is true
                         if (rec && rec.submitted) {
                           return <span className="text-green-600 font-medium">Responded</span>;
                         }
-                        // Otherwise
                         return <span className="text-red-500 font-medium">No response</span>;
                       })()
                     ) : (
@@ -259,16 +251,12 @@ export default function CreateTimetablePage() {
 
         <div className="space-y-4 mb-4">
           {slots.map((slot, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl shadow"
-            >
+            <div key={idx} className="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl shadow">
               <div className="flex items-center space-x-2">
                 <div className="flex-1">
                   <div className="text-sm font-medium text-slate-700 mb-1">{slot.subject}</div>
 
                   <div className="flex flex-col gap-2">
-
                     <input
                       type="number"
                       placeholder="Classes per week (e.g. 3)"
@@ -288,14 +276,20 @@ export default function CreateTimetablePage() {
                         value={slot.teacherId}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setSlots((prev) => prev.map((s, i) => (i === idx ? { ...s, teacherId: value } : s)));
+                          setSlots((prev) =>
+                            prev.map((s, i) => (i === idx ? { ...s, teacherId: value } : s))
+                          );
                         }}
                       >
                         <option value="">Select teacher</option>
                         {getTeachersForSubject(slot.subject).map((t) => {
                           const id = getTeacherId(t);
                           const label = t.name ?? t.fullname ?? id;
-                          return <option key={id} value={id}>{label}</option>;
+                          return (
+                            <option key={id} value={id}>
+                              {label}
+                            </option>
+                          );
                         })}
                       </select>
                     </div>
@@ -307,29 +301,29 @@ export default function CreateTimetablePage() {
                 <button
                   type="button"
                   onClick={async () => {
-                    if (!slot.teacherId) return alert('Select a teacher first');
+                    if (!slot.teacherId) return alert("Select a teacher first");
                     try {
                       const teacherIdStr = String(slot.teacherId);
                       const payload = { teacher_id: teacherIdStr };
 
                       const res = await fetch(`${API_BASE}/api/teachers/generate-link`, {
-                        method: 'POST',
+                        method: "POST",
                         headers: {
-                          'Content-Type': 'application/json',
+                          "Content-Type": "application/json",
                         },
-                        credentials: 'include',
+                        credentials: "include",
                         body: JSON.stringify(payload),
                       });
 
                       if (!res.ok) {
                         const text = await res.text();
-                        alert(text || 'Failed to send');
+                        alert(text || "Failed to send");
                       } else {
-                        alert('Sent successfully');
+                        alert("Sent successfully");
                       }
                     } catch (err) {
                       console.error(err);
-                      alert('Error sending');
+                      alert("Error sending");
                     }
                   }}
                   className="bg-green-600 text-white px-3 py-1 rounded-md"
@@ -340,7 +334,9 @@ export default function CreateTimetablePage() {
                 <button
                   type="button"
                   onClick={() => {
-                    setSlots((prev) => prev.map((s, i) => (i === idx ? { ...s, teacherId: "" } : s)));
+                    setSlots((prev) =>
+                      prev.map((s, i) => (i === idx ? { ...s, teacherId: "" } : s))
+                    );
                   }}
                   className="bg-gray-200 text-slate-800 px-3 py-1 rounded-md"
                 >
@@ -350,6 +346,7 @@ export default function CreateTimetablePage() {
             </div>
           ))}
         </div>
+
         <button
           onClick={() => {
             const payload = generateTimetableJSON();

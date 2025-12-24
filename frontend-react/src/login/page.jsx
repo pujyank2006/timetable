@@ -1,15 +1,16 @@
-"use client";
-
+// src/pages/Login.jsx
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    const navigate = useNavigate(); // Replace useRouter with useNavigate
+    const { login } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,15 +24,17 @@ export default function LoginPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: 'include',
+                credentials: "include",
                 body: JSON.stringify({ password }),
             });
+            const data = await response.json();
 
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Invalid password");
             }
-            router.push('/dashboard');
+            login(data.user);
+            navigate("/dashboard"); // Replace router.push with navigate
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {
@@ -48,7 +51,10 @@ export default function LoginPage() {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label
+                            htmlFor="password"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
                             Password
                         </label>
                         <input

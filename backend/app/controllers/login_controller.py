@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
 from app.config import Config
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 user_bp = Blueprint("users", __name__)
 
@@ -49,3 +50,11 @@ def login():
         
     except Exception as e:
         return jsonify({"message": f"Login failed: {str(e)}"}), 500
+
+@user_bp.get("/me")
+@jwt_required()
+def me():
+    identity = get_jwt_identity()
+    return jsonify({
+        "user": identity
+    })
