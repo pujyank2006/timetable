@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, make_response
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
