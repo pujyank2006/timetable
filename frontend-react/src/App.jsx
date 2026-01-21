@@ -15,12 +15,12 @@ export default function App() {
       <Route element={<PublicRoute />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/teacher/availability" element={<TeacherAvailability />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route path="/createtimetable" element={<CreateTimetablePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/teacher/availability" element={<TeacherAvailability />} />
         <Route path="/viewtimetable" element={<ViewTimetablePage />} />
         <Route path="/responses" element={<Responses />} />
       </Route>
