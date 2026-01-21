@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
@@ -18,25 +18,18 @@ def create_app():
     # Allow CORS from the frontend, include Authorization header and OPTIONS method
     CORS(
         app,
-        resources={r"/*": {
-            "origins": ["http://localhost:5173", "http://localhost:3000", "https://timetable-one-alpha.vercel.app"],
-            "supports_credentials": True
-        }}
+        resources={r"/*": {"origins": ["http://localhost:5173", "https://timetable-one-alpha.vercel.app"]}},
+        supports_credentials= True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
     
     # Initialize JWT
     jwt = JWTManager(app)
 
-    @app.before_request
-    def handle_options():
-        if request.method == "OPTIONS":
-            response = make_response()
-            response.headers.add("Access-Control-Allow-Origin", "https://timetable-one-alpha.vercel.app")
-            response.headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
-            response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-            response.headers.add("Access-Control-Allow-Credentials", "true")
-            return response
-    
+    @app.route("/")
+    def home():
+        return "Hello from Flask on Vercel!"
 
     # Route for users/login or logout
     app.register_blueprint(user_bp, url_prefix="/users")
@@ -59,8 +52,4 @@ def create_app():
 
     # Route for inputting
     app.register_blueprint(assign_bp, url_prefix="/input")
-
-    @app.route("/")
-    def home():
-        return "Hello from Flask on Vercel!"
     return app
