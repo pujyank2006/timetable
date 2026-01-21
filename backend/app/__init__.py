@@ -18,10 +18,14 @@ def create_app():
     # Allow CORS from the frontend, include Authorization header and OPTIONS method
     CORS(
         app,
-        resources={r"/*": {"origins": ["http://localhost:5173", "https://timetable-one-alpha.vercel.app"]}},
-        supports_credentials= True,
-        allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+        resources={r"/*": {
+            "origins": ["http://localhost:5173", "http://localhost:3000", "https://timetable-one-alpha.vercel.app"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True,
+            "max_age": 3600
+        }}
     )
     
     # Initialize JWT
