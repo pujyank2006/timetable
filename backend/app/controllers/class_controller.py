@@ -9,7 +9,7 @@ class_bp = Blueprint("classes", __name__)
 def get_classes():
     current_user = get_jwt_identity()
     if not current_user:
-        return jsnoify({
+        return jsonify({
             "message": "No user"
         })
     

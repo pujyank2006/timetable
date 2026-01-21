@@ -42,12 +42,9 @@ def login():
             max_age=7 * 24 * 60 * 60, # 7 days (should match your token expiry)
             httponly=True,  # CRITICAL: Prevents XSS attacks (JS cannot read this)
             secure=True,   # Set to True if using HTTPS (Production), False for Localhost
-            samesite="None", # CRITICAL: Required for cross-origin cookies
+            samesite="None", # CRITICAL: Prevents CSRF (Cookie only sent on nav)
             path="/"        # Available across the whole app
         )
-        
-        # Add CORS headers for cross-origin cookie access
-        response.headers["Access-Control-Allow-Credentials"] = "true"
 
         return response, 200
         
