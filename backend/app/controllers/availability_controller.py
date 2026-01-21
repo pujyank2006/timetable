@@ -19,11 +19,10 @@ def get_all_availability():
             return jsnoify({
                 "message": "No user"
             })
-    records = list(availability_collection.find())
-    for r in records:
-        r["_id"] = str(r["_id"]) 
-
-    return jsonify(records), 200
+        records = list(availability_collection.find())
+        for r in records:
+            r["_id"] = str(r["_id"]) 
+        return jsonify(records), 200
     except Exception as e:
         return jsonify({"message": f"Error: {str(e)}"}), 500
 
@@ -40,7 +39,6 @@ def reset_availability():
             "message": "Availability data reset successfully",
             "deleted_count": result.deleted_count
         }), 200
-        
     except Exception as e:
         return jsonify({"message": f"Error: {str(e)}"}), 500
 
