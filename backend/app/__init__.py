@@ -20,20 +20,23 @@ def create_app():
         app,
         resources={r"/*": {
             "origins": ["http://localhost:5173", "http://localhost:3000", "https://timetable-one-alpha.vercel.app"],
-            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-            "allow_headers": ["Content-Type", "Authorization"],
-            "expose_headers": ["Content-Type", "Authorization"],
-            "supports_credentials": True,
-            "max_age": 3600
+            "supports_credentials": True
         }}
     )
     
     # Initialize JWT
     jwt = JWTManager(app)
 
-    @app.route("/")
-    def home():
-        return "Hello from Flask on Vercel!"
+    @app.before_request
+    def handle_options():
+        if request.method == "OPTIONS":
+            response = make_response()
+            response.headers.add("Access-Control-Allow-Origin", "https://timetable-one-alpha.vercel.app")
+            response.headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
+            response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+            response.headers.add("Access-Control-Allow-Credentials", "true")
+            return response
+    
 
     # Route for users/login or logout
     app.register_blueprint(user_bp, url_prefix="/users")
@@ -56,4 +59,8 @@ def create_app():
 
     # Route for inputting
     app.register_blueprint(assign_bp, url_prefix="/input")
+
+    @app.route("/")
+    def home():
+        return "Hello from Flask on Vercel!"
     return app
