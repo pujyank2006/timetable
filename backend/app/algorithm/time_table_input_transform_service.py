@@ -38,7 +38,7 @@ def transform_input():
     output.append("end")
 
     try:
-        INPUT_FILE_PATH = "/tmp/input.txt"
+        INPUT_FILE_PATH = "input.txt"
         with open(INPUT_FILE_PATH, "w") as f:
             f.write("\n".join(output))
         return True
