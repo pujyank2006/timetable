@@ -10,7 +10,7 @@ from app.controllers.login_controller import user_bp
 from app.controllers.logout_controller import logout_bp
 from app.controllers.getTimeTable_controller import getTimeTable_bp
 from app.algorithm.time_table_generation_controller import generation_bp
-
+from app.controllers.assignment_controller import assign_bp
 
 def create_app():
     app = Flask(__name__)
@@ -49,4 +49,7 @@ def create_app():
     
     # Route for getting time table
     app.register_blueprint(getTimeTable_bp, url_prefix="/get")
+
+    # Route for inputting
+    app.register_blueprint(assign_bp, url_prefix="/input")
     return app

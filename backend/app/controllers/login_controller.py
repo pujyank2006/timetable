@@ -54,7 +54,10 @@ def login():
 @user_bp.get("/me")
 @jwt_required()
 def me():
-    identity = get_jwt_identity()
-    return jsonify({
-        "user": identity
-    })
+    try:
+        identity = get_jwt_identity()
+        return jsonify({
+            "user": identity
+        })
+    except Exception as e:
+        return jsonify({"message": f"Failed to get user info: {str(e)}"}), 500

@@ -13,16 +13,19 @@ def post_availability():
 @availability_bp.get("/all")
 @jwt_required()
 def get_all_availability():
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsnoify({
-            "message": "No user"
-        })
+    try:
+        current_user = get_jwt_identity()
+        if not current_user:
+            return jsnoify({
+                "message": "No user"
+            })
     records = list(availability_collection.find())
     for r in records:
         r["_id"] = str(r["_id"]) 
 
     return jsonify(records), 200
+    except Exception as e:
+        return jsonify({"message": f"Error: {str(e)}"}), 500
 
 @availability_bp.delete("/reset")
 @jwt_required()
@@ -38,5 +41,16 @@ def reset_availability():
             "deleted_count": result.deleted_count
         }), 200
         
+    except Exception as e:
+        return jsonify({"message": f"Error: {str(e)}"}), 500
+
+@availability_bp.get("/response/<teacher_id>")
+def get_availability_response(teacher_id):
+    try:
+        record = availability_collection.find_one({"teacher_id": teacher_id}, {"_id": 0})
+        if not record:
+            return jsonify({"message": "No availability found for this teacher"}), 404
+        
+        return jsonify(record), 200
     except Exception as e:
         return jsonify({"message": f"Error: {str(e)}"}), 500

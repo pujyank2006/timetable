@@ -5,6 +5,7 @@ import Dashboard from "./dashboard/page";
 import LoginPage from "./login/page";
 import TeacherAvailability from "./teacher/availability/page";
 import ViewTimetablePage from "./viewTimetable/page";
+import Responses from "./response/page";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/teacher/availability" element={<TeacherAvailability />} />
         <Route path="/viewtimetable" element={<ViewTimetablePage />} />
+        <Route path="/responses" element={<Responses />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" />} />

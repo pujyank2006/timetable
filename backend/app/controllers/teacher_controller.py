@@ -34,13 +34,10 @@ def create_and_send__link():
         return jsonify({"error": "Missing required field: teacher_id"}), 400
     
     token = generate_token_for_teacher(teacher_id)
-    teacher_email = next(
-        (teacher['email'] for teacher in fetch_teachers() if teacher['id'] == teacher_id),
-        None
-    )
+    teacher_email = data.get("teacher_email")
 
     if not teacher_email:
-        return jsonify({"error": f"Teacher with ID {teacher_id} not found or email is missing."}), 404
+        return jsonify({"error": "Missing required field: teacher_email"}), 404
     
     try:
         send_email(teacher_email, token, teacher_id)

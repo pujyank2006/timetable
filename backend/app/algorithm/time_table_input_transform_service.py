@@ -21,10 +21,13 @@ def transform_input():
         output.append(" ".join(line))
     output.append("end")
 
-    # Teacher
+    # Teachers
     output.append("teachers")
-    for t in data['teachers']:
-        output.append(f"{t['name']} {t['subject']}")
+    for t in data.get("teachers", []):
+        subject = t["subject"]
+        if isinstance(subject, list):
+            subject = ", ".join(subject)
+        output.append(f"{t['name']} {subject}")
     output.append("end")
 
     # Unavailability

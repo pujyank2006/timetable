@@ -110,7 +110,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h2 className="text-lg font-semibold mb-2">Create Timetable</h2>
                             <p className="text-sm text-slate-500 mb-4">
@@ -136,9 +136,21 @@ export default function Dashboard() {
                         </div>
 
                         <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h2 className="text-lg font-semibold mb-2">Availabilities</h2>
+                            <p className="text-sm text-slate-500 mb-4">
+                                View the responses of teachers to availability requests and approve them to create timetables.
+                            </p>
+                            <Link to="/responses">
+                                <button className="bg-green-600 text-white px-4 py-2 rounded-md">
+                                    Check Responses
+                                </button>
+                            </Link>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h2 className="text-lg font-semibold mb-2">Clear availabilities</h2>
                             <p className="text-sm text-slate-500 mb-4">
-                                Clear availabilities for teachers to create new time-tables
+                                Clear availabilities for teachers to create new timetables
                             </p>
                             <button
                                 onClick={handleReset}

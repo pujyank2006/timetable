@@ -16,7 +16,7 @@ def generate_token_for_teacher(teacher_id):
     return token
 
 def send_email(teacher_email, token, teacher_id):
-    url = f"https://timetable-tt-tau.vercel.app/teacher/availability?token={token}&teacher_id={teacher_id}"
+    url = f"https://timetable-one-alpha.vercel.app/teacher/availability?token={token}&teacher_id={teacher_id}"
 
     body = f"""
     Hello Teacher, <br><br>
