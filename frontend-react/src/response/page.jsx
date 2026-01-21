@@ -70,15 +70,6 @@ export default function ResponsesPage() {
         fetchAvailability();
     }, []);
 
-    // Debugg
-    useEffect(() => {
-        console.log("Updated avaSlots:", avaSlots);
-        console.log(inputData);
-        console.log(inputData?.[0]?.["class_name"]);
-        console.log(selectedClass);
-    }, [avaSlots]);
-
-
     // Filter teachers based on selected class
     const getTeachersForClass = () => {
         const classData = inputData.find(item => item.class_name === selectedClass);
@@ -166,7 +157,7 @@ export default function ResponsesPage() {
         };
 
         const json_input = finalPayload;
-
+        console.log(json_input);
         try {
             const res = await fetch(`${API_BASE}/generate/time-table`, {
                 method: "POST",

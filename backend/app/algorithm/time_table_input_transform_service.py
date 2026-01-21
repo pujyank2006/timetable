@@ -37,7 +37,7 @@ def transform_input():
         output.append(f"{ua['name']} " + " ".join(str(s) for s in ua["slots"]))
     output.append("end")
 
-    try: 
+    try:
         INPUT_FILE_PATH = "/tmp/input.txt"
         with open(INPUT_FILE_PATH, "w") as f:
             f.write("\n".join(output))
