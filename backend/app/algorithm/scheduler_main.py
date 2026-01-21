@@ -84,6 +84,13 @@ class SchedulerMain:
             
             self._print_generation(self.first_list)
             nogenerations += 1
+        
+        # If no perfect solution found, store the best solution found
+        if SchedulerMain.final_son is None and len(self.first_list) > 0:
+            print(f"No perfect solution found. Storing best solution with fitness: {self.first_list[0].fitness}")
+            best_chromosome = self.first_list[0]
+            best_chromosome.print_time_table()
+            SchedulerMain.final_son = best_chromosome
 
     def _select_parent_roulette(self) -> 'Chromosome':
         elite_size = self.population_size // 10

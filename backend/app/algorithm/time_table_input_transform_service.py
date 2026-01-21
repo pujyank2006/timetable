@@ -9,6 +9,7 @@ def transform_input():
     except ValidationError as e:
         return jsonify(e.errors()), 400
     
+    print(data)  # For debugging purposes
     output = []
 
     # Student Groups
