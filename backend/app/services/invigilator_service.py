@@ -1,11 +1,52 @@
 from datetime import datetime, timedelta
 from typing import List, Dict
+from bson import ObjectId
 from app.utils.db import teachers_collection, availability_collection, invigilator_collection
+from app.config import Config
 
 def is_teacher_available(teacher_name: str, date: str, exam_time_start: str, exam_time_end: str) -> bool:
-    # Just check if teacher exists
+    # Check if teacher exists
     teacher = teachers_collection.find_one({"name": teacher_name})
-    return teacher is not None
+    if not teacher:
+        return False
+    
+    teacher_id = str(teacher.get("_id"))
+    
+    # Get teacher's availability record
+    availability = availability_collection.find_one({"teacher_id": teacher_id})
+    if not availability:
+        # No availability record means teacher is available for all slots
+        return True
+    
+    unavailable_slots = availability.get("slots", [])
+    
+    # Calculate which slot the exam falls into
+    # Parse date and time
+    try:
+        exam_date = datetime.strptime(date, "%Y-%m-%d")
+        exam_start = datetime.strptime(exam_time_start, "%H:%M")
+        exam_end = datetime.strptime(exam_time_end, "%H:%M")
+    except ValueError:
+        return False
+    
+    # Get day of week (0 = Monday, 4 = Friday for 5-day week)
+    day_of_week = exam_date.weekday()
+    
+    # Check if day is within working days (assuming 5-day week: Mon-Fri)
+    if day_of_week >= int(Config.DAYS_PER_WEEK):
+        return False
+    
+    # Calculate slot number based on time
+    # Assuming slots are distributed throughout the day
+    slots_per_day = int(Config.SLOTS_PER_DAY)
+    
+    # Calculate exam slot (this is a simplified approach)
+    # You may need to adjust based on your slot definition
+    exam_hour = exam_start.hour
+    slot_number = day_of_week * slots_per_day + (exam_hour // (24 // slots_per_day))
+    
+    # Check if this slot is in unavailable slots
+    return slot_number not in unavailable_slots
 
 
 def assign_invigilators_simple(
