@@ -22,28 +22,20 @@ def login():
         if not check_password_hash(Config.ADMIN_PASSWORD, password):
             return jsonify({"message": "Invalid password"}), 401
         
-        # 1. Create the token
         access_token = create_access_token(identity="admin")
-        # 2. Create a response object (but don't return it yet)
-        # notice we DO NOT send the 'token' in this JSON body anymore
-        # Also include the token in the JSON response so a same-origin frontend
-        # can store a client-side cookie or local state. (We keep the HttpOnly
-        # cookie as well for the API domain.)
         response = make_response(jsonify({
             "message": "Login successful",
             "user": "admin"
         }))
 
-        # 3. Set the token in a secure cookie
-        # This cookie cannot be accessed by client-side JavaScript (HttpOnly)
         response.set_cookie(
-            "access_token_cookie",  # Default name expected by Flask-JWT-Extended
+            "access_token_cookie",
             value=access_token,
-            max_age=7 * 24 * 60 * 60, # 7 days (should match your token expiry)
-            httponly=True,  # CRITICAL: Prevents XSS attacks (JS cannot read this)
-            secure=True,   # Set to True if using HTTPS (Production), False for Localhost
-            samesite="None", # CRITICAL: Prevents CSRF (Cookie only sent on nav)
-            path="/"        # Available across the whole app
+            max_age=7 * 24 * 60 * 60,
+            httponly=True,
+            secure=True,
+            samesite="None", 
+            path="/"
         )
 
         return response, 200

@@ -1,19 +1,17 @@
-// src/pages/Dashboard.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Dashboard() {
-    const navigate = useNavigate(); // Replace useRouter with useNavigate
-    const [error, setError] = useState("");
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const { logout } = useAuth();
 
     async function handleLogout() {
         setLoading(true);
-        setError("");
 
         try {
             const response = await fetch(`${API_BASE}/user/logout`, {
@@ -29,11 +27,10 @@ export default function Dashboard() {
                 throw new Error(errorData.message || "Logout failed");
             }
             logout();
-            navigate("/"); // Replace router.push with navigate
+            navigate("/");
         } catch (err) {
             console.error("Logout Error:", err);
-            setError(err.message || "Logout failed");
-            alert("Failed to logout: " + err.message);
+            toast.error("Failed to logout: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -50,12 +47,14 @@ export default function Dashboard() {
 
             if (response.ok) {
                 console.log("Reset success:", data);
-                alert("Availability reset!");
+                toast.success("Availability reset!");
             } else {
                 console.log("Reset failed:", data.message);
+                toast.error(data.message || "Reset failed");
             }
         } catch (error) {
             console.log("Network error:", error);
+            toast.error("Network error: " + error.message);
         }
     };
 
@@ -94,14 +93,6 @@ export default function Dashboard() {
             </header>
 
             <div className="min-h-screen bg-gray-50 py-8">
-                {error && (
-                    <div className="max-w-6xl mx-auto px-4 mb-4">
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                            {error}
-                        </div>
-                    </div>
-                )}
-
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -148,6 +139,18 @@ export default function Dashboard() {
                         </div>
 
                         <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h2 className="text-lg font-semibold mb-2">Assign Invigilators</h2>
+                            <p className="text-sm text-slate-500 mb-4">
+                                Assign teachers to invigilate upcoming exams
+                            </p>
+                            <Link to="/invigilation">
+                                <button className="bg-yellow-600 text-white px-4 py-2 rounded-md">
+                                    Assign
+                                </button>
+                            </Link>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h2 className="text-lg font-semibold mb-2">Clear availabilities</h2>
                             <p className="text-sm text-slate-500 mb-4">
                                 Clear availabilities for teachers to create new timetables
@@ -159,13 +162,6 @@ export default function Dashboard() {
                                 Clear
                             </button>
                         </div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-lg shadow-sm">
-                        <h3 className="text-base font-semibold mb-3">Activity</h3>
-                        <p className="text-sm text-slate-500">
-                            No recent activity. Generated timetables and job status will appear here.
-                        </p>
                     </div>
                 </div>
             </div>

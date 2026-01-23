@@ -11,6 +11,7 @@ from app.controllers.logout_controller import logout_bp
 from app.controllers.getTimeTable_controller import getTimeTable_bp
 from app.algorithm.time_table_generation_controller import generation_bp
 from app.controllers.assignment_controller import assign_bp
+from app.controllers.invigilator_controller import invig_bp
 
 def create_app():
     app = Flask(__name__)
@@ -52,4 +53,7 @@ def create_app():
 
     # Route for inputting
     app.register_blueprint(assign_bp, url_prefix="/input")
+
+    # Route for invigilator assignment
+    app.register_blueprint(invig_bp, url_prefix="/invigilators")
     return app

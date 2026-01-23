@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -9,7 +8,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); // Replace useRouter with useNavigate
+    const navigate = useNavigate();
     const { login } = useAuth();
 
     const handleLogin = async (e) => {
@@ -34,7 +33,7 @@ export default function LoginPage() {
                 throw new Error(errorData.message || "Invalid password");
             }
             login(data.user);
-            navigate("/dashboard"); // Replace router.push with navigate
+            navigate("/dashboard");
         } catch (err) {
             setError(err.message || "Login failed");
         } finally {

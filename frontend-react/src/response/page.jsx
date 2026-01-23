@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from "react-toastify";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,7 +13,6 @@ export default function ResponsesPage() {
     const [availabilityMap, setAvailabilityMap] = useState(null);
     const [avaSlots, setAvaSlots] = useState({});
 
-    // Fetch input data on component mount
     useEffect(() => {
         const fetchInputData = async () => {
             try {
@@ -33,7 +33,6 @@ export default function ResponsesPage() {
                 if (result.success) {
                     setInputData(result.data);
                     setClasses(result.classes);
-                    // Set default selected class to first class
                     if (result.classes.length > 0) {
                         setSelectedClass(result.classes[0]);
                     }
@@ -175,10 +174,10 @@ export default function ResponsesPage() {
 
             const result = await res.json();
             console.log("Timetable generated successfully:", result);
-            alert("Timetable generation started successfully!");
+            toast.success("Timetable generation started successfully!");
         } catch (err) {
             console.error("Failed to submit timetable configuration:", err);
-            alert(`Error submitting data: ${err.message}`);
+            toast.error(`Error submitting data: ${err.message}`);
         }
     };
 
@@ -425,7 +424,7 @@ export default function ResponsesPage() {
                                         </button>
                                         <button
                                             onClick={async () => {
-                                                if (!selectedTeacherForModal.email) return alert("Email is required to send");
+                                                if (!selectedTeacherForModal.email) return toast.error("Email is required to send");
                                                 try {
                                                     const res = await fetch(`${API_BASE}/api/teachers/generate-link`, {
                                                         method: "POST",
@@ -438,13 +437,13 @@ export default function ResponsesPage() {
 
                                                     if (!res.ok) {
                                                         const text = await res.text();
-                                                        alert(text || "Failed to send email");
+                                                        toast.error(text || "Failed to send email");
                                                     } else {
-                                                        alert("Email sent successfully");
+                                                        toast.success("Email sent successfully");
                                                     }
                                                 } catch (err) {
                                                     console.error(err);
-                                                    alert("Error sending email");
+                                                    toast.error("Error sending email");
                                                 }
                                             }}
                                             className="flex-1 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-semibold text-sm"

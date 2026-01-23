@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const hours = ["9-10", "10-11", "11-12", "12-1", "2-3", "3-4", "4-5"];
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-// Updated function: Extract teacher_id from URL using React Router
 const getTeacherIdFromUrl = (searchParams) => {
-  // 1. Try standard URLSearchParams first
   let id = searchParams.get('teacher_id');
-
-  // 2. Fallback: If not found and URL might be malformed, we'd need to handle it differently
-  // React Router's useSearchParams handles standard query params well
   return id;
 };
 
@@ -40,8 +36,7 @@ const styles = {
 };
 
 const TeacherAvailability = () => {
-  const [searchParams] = useSearchParams(); // React Router hook to get URL params
-  
+  const [searchParams] = useSearchParams();
   const [unavailability, setUnavailability] = useState(() => {
     const initial = {};
     days.forEach(day => {
@@ -53,9 +48,8 @@ const TeacherAvailability = () => {
   const [teacherId, setTeacherId] = useState(null);
 
   useEffect(() => {
-    // Extract teacher_id from React Router's searchParams
     const id = getTeacherIdFromUrl(searchParams);
-    console.log("Extracted Teacher ID:", id); // Debug log
+    console.log("Extracted Teacher ID:", id);
     setTeacherId(id);
   }, [searchParams]);
 
@@ -69,7 +63,7 @@ const TeacherAvailability = () => {
 
   const submitData = () => {
     if (!teacherId) {
-      alert("Error: Missing teacher_id in URL. Cannot submit.");
+      toast.error("Error: Missing teacher_id in URL. Cannot submit.");
       return;
     }
 
@@ -103,12 +97,12 @@ const TeacherAvailability = () => {
         return res.json();
       })
       .then(data => {
-        alert("Submitted Successfully!");
+        toast.success("Submitted Successfully!");
         console.log("Response:", data);
       })
       .catch(error => {
         console.error("Submission failed:", error);
-        alert(`Submission Failed: ${error.message || JSON.stringify(error)}`);
+        toast.error(`Submission Failed: ${error.message || JSON.stringify(error)}`);
       });
   };
 

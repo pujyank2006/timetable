@@ -209,9 +209,6 @@ export default function ViewTimetablePage() {
             </tbody>
           </table>
         </div>
-        <div className="mt-4 text-center text-xs text-slate-400">
-          Generated via Timetable Management System
-        </div>
       </div>
     </div>
   );

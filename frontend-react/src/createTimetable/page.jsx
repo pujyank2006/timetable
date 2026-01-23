@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -46,7 +47,7 @@ export default function CreateTimetablePage() {
 
   const handleAddToDB = async () => {
     if (classSelection === "new" && !newClassName.trim()) {
-      alert("Please enter a new class name");
+      toast.error("Please enter a new class name");
       return;
     }
 
@@ -83,11 +84,11 @@ export default function CreateTimetablePage() {
 
       const result = await res.json();
       console.log("Data saved successfully:", result);
-      alert("Timetable data saved to database successfully!");
+      toast.success("Timetable data saved to database successfully!");
       handleClear();
     } catch (err) {
       console.error("Failed to save data:", err);
-      alert(`Error: ${err.message}`);
+      toast.error(`Error: ${err.message}`);
     }
   };
 
@@ -228,7 +229,7 @@ export default function CreateTimetablePage() {
                         </button>
                         <button
                           onClick={async () => {
-                            if (!row.email) return alert("Email is required to send");
+                            if (!row.email) return toast.error("Email is required to send");
                             try {
                               const res = await fetch(`${API_BASE}/api/teachers/generate-link`, {
                                 method: "POST",
@@ -241,13 +242,13 @@ export default function CreateTimetablePage() {
 
                               if (!res.ok) {
                                 const text = await res.text();
-                                alert(text || "Failed to send email");
+                                toast.error(text || "Failed to send email");
                               } else {
-                                alert("Email sent successfully");
+                                toast.success("Email sent successfully");
                               }
                             } catch (err) {
                               console.error(err);
-                              alert("Error sending email");
+                              toast.error("Error sending email");
                             }
                           }}
                           className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition mr-2"
