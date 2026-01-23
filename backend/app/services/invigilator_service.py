@@ -25,7 +25,6 @@ def is_teacher_available(teacher_name: str, date: str, exam_time_start: str, exa
     try:
         exam_date = datetime.strptime(date, "%Y-%m-%d")
         exam_start = datetime.strptime(exam_time_start, "%H:%M")
-        exam_end = datetime.strptime(exam_time_end, "%H:%M")
     except ValueError:
         return False
     
@@ -36,14 +35,26 @@ def is_teacher_available(teacher_name: str, date: str, exam_time_start: str, exa
     if day_of_week >= int(Config.DAYS_PER_WEEK):
         return False
     
-    # Calculate slot number based on time
-    # Assuming slots are distributed throughout the day
+    # Map hours to slot indices within a day
+    # Hour slots: 9, 10, 11, 12, 14, 15, 16 (skipping 13 - lunch)
+    hour_slots = [9, 10, 11, 12, 14, 15, 16]
+    exam_hour = exam_start.hour
+    
+    # Find which hour slot index this exam hour falls into
+    hour_slot_index = -1
+    for idx, hour in enumerate(hour_slots):
+        if exam_hour == hour:
+            hour_slot_index = idx
+            break
+    
+    if hour_slot_index == -1:
+        # Hour not found in slot definition, assume unavailable
+        return False
+    
     slots_per_day = int(Config.SLOTS_PER_DAY)
     
-    # Calculate exam slot (this is a simplified approach)
-    # You may need to adjust based on your slot definition
-    exam_hour = exam_start.hour
-    slot_number = day_of_week * slots_per_day + (exam_hour // (24 // slots_per_day))
+    # Calculate overall slot number: day_index * slots_per_day + hour_slot_index
+    slot_number = day_of_week * slots_per_day + hour_slot_index
     
     # Check if this slot is in unavailable slots
     return slot_number not in unavailable_slots
