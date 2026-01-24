@@ -75,7 +75,7 @@ export default function Dashboard() {
                             Dashboard
                         </Link>
                         <Link
-                            to="/create-timetable"
+                            to="/createTimetable"
                             className="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md"
                         >
                             Create Timetable
