@@ -3,8 +3,11 @@ from typing import List, Dict
 from app.utils.db import teachers_collection, availability_collection, invigilator_collection
 
 def is_teacher_available(teacher_name: str, date: str, exam_time_start: str, exam_time_end: str) -> bool:
-    teacher = teachers_collection.find_one({"name": teacher_name})
-    return teacher is not None
+    # teacher = teachers_collection.find_one({"name": teacher_name})
+    # return teacher is not None
+
+    # Accept any teacher
+    return True
 
 
 def assign_invigilators_simple(
