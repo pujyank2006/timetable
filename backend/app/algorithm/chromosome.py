@@ -4,6 +4,7 @@ from app.algorithm.gene import Gene
 from app.algorithm.input_data import InputData
 from app.algorithm.time_table import TimeTable
 from app.algorithm.time_table_storing_service import store_time_table
+from app.services.availability_update_service import update_availability_after_timetable
 
 class Chromosome:   
     def __init__(self, config: InputData):
@@ -101,6 +102,10 @@ class Chromosome:
             timetable_dict[group_name] = subject_positions
         print(timetable_dict)
         print(store_time_table(timetable_dict))
+        
+        # Update availability after timetable creation
+        availability_update_result = update_availability_after_timetable()
+        print("Availability update result:", availability_update_result)
 
     def print_chromosome(self):
         for i in range(self.nostgrp):

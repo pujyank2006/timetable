@@ -13,12 +13,13 @@ generation_bp = Blueprint("generation", __name__)
 @generation_bp.post("/time-table")
 def generate_time_table():
     try:
-        if not transform_input():
+        data = request.get_json()
+        if not transform_input(data):
             return jsonify({"message": "Failed to transform input"}), 500
         
         # Run the scheduler directly within Flask context (not as subprocess)
         try:
-            config_data = InputData("/tmp/input.txt")
+            config_data = InputData("input.txt")
             scheduler = SchedulerMain(config_data)
             
             # Get the final solution and save it

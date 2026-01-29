@@ -6,6 +6,7 @@ from app.config import Config
 from app.controllers.class_controller import class_bp
 from app.controllers.teacher_controller import teacher_bp
 from app.controllers.availability_controller import availability_bp
+from app.controllers.availability_update_controller import availability_update_bp
 from app.controllers.login_controller import user_bp
 from app.controllers.logout_controller import logout_bp
 from app.controllers.getTimeTable_controller import getTimeTable_bp
@@ -44,6 +45,9 @@ def create_app():
 
     # Route for availability
     app.register_blueprint(availability_bp, url_prefix="/availability")
+    
+    # Route for availability update
+    app.register_blueprint(availability_update_bp, url_prefix="/api")
 
     # Route for time table generation
     app.register_blueprint(generation_bp, url_prefix="/generate")

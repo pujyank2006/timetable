@@ -18,7 +18,7 @@ def assign_invigilators():
                 return jsonify({"error": f"{field} is required"}), 400
         
         # Parse and run assignment
-        assignments = assign_invigilators_simple(
+        assignment_result = assign_invigilators_simple(
             exam_date_from=data["exam_date_from"],
             exam_date_to=data["exam_date_to"],
             teacher_names=data["teacher_names"],
@@ -27,6 +27,14 @@ def assign_invigilators():
             exam_time_end=data["exam_time_end"]
         )
         
+        # Check if assignment was successful
+        if not assignment_result["success"]:
+            return jsonify({
+                "success": False,
+                "error": assignment_result.get("summary", {}).get("error", "Unknown error"),
+                "detailed_explanation": assignment_result.get("detailed_explanation", [])
+            }), 400
+        
         # Save to database
         assignment_doc = {
             "exam_date_from": data["exam_date_from"],
@@ -34,7 +42,10 @@ def assign_invigilators():
             "teachers_per_day": data["teachers_per_day"],
             "exam_time_start": data["exam_time_start"],
             "exam_time_end": data["exam_time_end"],
-            "assignments": assignments,
+            "assignments": assignment_result.get("assignments_list", []),  # Use backward compatibility field
+            "summary": assignment_result.get("summary", {}),
+            "teacher_summary": assignment_result.get("teacher_summary", {}),
+            "detailed_explanation": assignment_result.get("detailed_explanation", []),
             "created_at": datetime.now().isoformat()
         }
         
@@ -43,7 +54,11 @@ def assign_invigilators():
         return jsonify({
             "success": True,
             "assignment_id": assignment_id,
-            "assignments": assignments
+            "assignments": assignment_result.get("assignments_list", []),  # For backward compatibility
+            "summary": assignment_result.get("summary", {}),
+            "teacher_summary": assignment_result.get("teacher_summary", {}),
+            "detailed_explanation": assignment_result.get("detailed_explanation", []),
+            "logs": assignment_result.get("logs", [])
         }), 201
     
     except Exception as e:
