@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import Any, List, Dict
 from app.utils.db import teachers_collection, availability_collection, invigilator_collection
 
 def calculate_slot_number(date: str, time_start: str, hours_per_day: int = 7, days_per_week: int = 5) -> int:
