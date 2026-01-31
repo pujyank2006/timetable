@@ -58,11 +58,11 @@ class Chromosome:
 
                 
                 if hasattr(teacher_obj, 'unavailable_slots') and i in teacher_obj.unavailable_slots:
-                    self.point += 1000
+                    self.point += 4000
 
                 
                 if teacher_id in teacher_list:
-                    self.point += 500
+                    self.point += 4000
                 else:
                     teacher_list.append(teacher_id)
 

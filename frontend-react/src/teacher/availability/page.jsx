@@ -80,7 +80,7 @@ const TeacherAvailability = () => {
 
     const payload = {
       teacher_id: teacherId,
-      slots: selectedSlots,
+      current_unavailability: selectedSlots,
       submitted: true
     };
 

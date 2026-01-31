@@ -52,15 +52,28 @@ class Gene:
         def find_block_position(m):
             candidates = list(free_positions)
             random.shuffle(candidates)
+
             for pos in candidates:
-                if pos % self.hours <= self.hours - m:
-                    ok = True
-                    for q in range(pos, pos + m):
-                        if q not in free_positions:
-                            ok = False
-                            break
-                    if ok:
-                        return pos
+                day_hour = pos % self.hours
+
+                if day_hour >= self.hours - m:
+                    continue
+                
+                L = config.lunch_hour
+                crosses_lunch = (
+                    day_hour < L and day_hour + m > L
+                )
+
+                if crosses_lunch:
+                    continue
+
+                ok = True
+                for q in range(pos, pos + m):
+                    if q not in free_positions:
+                        ok = False
+                        break
+                if ok:
+                    return pos
             return None
 
         for block in blocks:

@@ -31,4 +31,5 @@ class Config:
     
     SLOTS_PER_DAY = int(os.getenv("SLOTS_PER_DAY", "7"))
     DAYS_PER_WEEK = int(os.getenv("DAYS_PER_WEEK", "5"))
+    LUNCH_HOUR = int(os.getenv("LUNCH_HOUR", "3"))
     MAX_UNAVAILABLE_FRACTION = float(os.getenv("MAX_UNAVAILABLE_FRACTION", "0.95"))

@@ -56,8 +56,10 @@ export default function ResponsesPage() {
                 const data = await res.json();
                 const map = {};
                 (data || []).forEach((rec) => {
-                    const key = String(rec.teacher_id ?? rec.id ?? rec.name ?? rec._id ?? "");
-                    map[key] = rec;
+                    const key = rec.teacher_id;
+                    if (key) {
+                        map[key] = rec;
+                    }
                 });
                 setAvailabilityMap(map);
             } catch (err) {
@@ -310,7 +312,7 @@ export default function ResponsesPage() {
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[80vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
                         {/* Modal Header */}
                         <div className="bg-blue-500 p-4 flex justify-between items-center text-white">
-                            <h3 className="text-xl font-bold">Availability response</h3>
+                            <h3 className="text-xl font-bold">Teacher Submitted Availability</h3>
                             <button
                                 onClick={() => setSelectedTeacherForModal(null)}
                                 className="hover:bg-blue-600 rounded-full p-1 transition-colors"
@@ -359,13 +361,17 @@ export default function ResponsesPage() {
                                                         grid[day] = new Array(hours.length).fill(0);
                                                     });
 
-                                                    (selectedTeacherForModal.availabilityData.slots || []).forEach(index => {
+                                                    const unavailable =
+                                                        selectedTeacherForModal.availabilityData.authentic_unavailability || [];
+
+                                                    unavailable.forEach(index => {
                                                         const dayIndex = Math.floor(index / hours.length);
                                                         const hourIndex = index % hours.length;
                                                         if (days[dayIndex]) {
                                                             grid[days[dayIndex]][hourIndex] = 1;
                                                         }
                                                     });
+
 
                                                     return days.map(day => (
                                                         <div key={day}>
@@ -411,7 +417,7 @@ export default function ResponsesPage() {
                                     <div className="pt-4 border-t border-gray-200 flex gap-4"> {/* Added 'flex' and 'gap-4' */}
                                         <button
                                             onClick={() => {
-                                                const slots = availabilityMap[selectedTeacherForModal.id]?.slots;
+                                                const slots = availabilityMap[selectedTeacherForModal.id]?.authentic_unavailability;
                                                 console.log(slots);
                                                 setAvaSlots(prev => ({
                                                     ...prev,

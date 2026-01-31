@@ -34,6 +34,7 @@ class InputData:
     noteacher: int = 0
     hoursperday: int = 0
     daysperweek: int = 0
+    lunch_hour: int = 4
 
     MAX_SIZE = 100 
     
@@ -55,6 +56,7 @@ class InputData:
     
         InputData.hoursperday = 7
         InputData.daysperweek = 5
+        InputData.lunch_hour = 4
 
         try:
             file_path = self.input_file_path

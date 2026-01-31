@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import Dict, List, Any
 from app.utils.db import availability_collection, teachers_collection, time_table_collection, input_data_collection
 
@@ -116,69 +117,82 @@ def _find_teacher_for_subject(class_id: str, subject: str, teachers: List[Dict])
 
 def _update_teacher_availability(teacher_id: str, occupied_slots: List[int]) -> bool:
     try:
-        # Get current availability for this teacher
-        current_availability = availability_collection.find_one({"teacher_id": teacher_id})
-        
-        if not current_availability:
-            # Create new availability entry if it doesn't exist
-            new_availability = {
+        doc = availability_collection.find_one({"teacher_id": teacher_id})
+
+        occupied_slots = sorted(set(int(s) for s in occupied_slots))
+
+        if not doc:
+            # System-created availability (teacher has not submitted yet)
+            availability_collection.insert_one({
                 "teacher_id": teacher_id,
-                "slots": occupied_slots,
-                "submitted": True
-            }
-            availability_collection.insert_one(new_availability)
+                "authentic_unavailability": [],
+                "current_unavailability": occupied_slots,
+                "submitted": False
+            })
             return True
+
+        # Merge timetable slots into current_unavailability
+        authentic = set(doc.get("authentic_unavailability", []))
         
-        # Get existing unavailable slots
-        existing_slots = set(current_availability.get("slots", []))
-        
-        # Add new occupied slots to the unavailable slots
-        updated_slots = list(existing_slots.union(set(occupied_slots)))
-        
-        # Update the availability document
+
+        updated_current = sorted(authentic.union(occupied_slots))
+
         availability_collection.update_one(
             {"teacher_id": teacher_id},
-            {"$set": {"slots": updated_slots, "submitted": True}}
-            # If only timetable slots have to be considered
-            # {"$set": {"slots": occupied_slots, "submitted": True}}
+            {
+                "$unset": {"slots": ""},  # legacy cleanup
+                "$set": {
+                    "current_unavailability": updated_current
+                }
+            }
         )
-        
+
         return True
-        
+
     except Exception as e:
         print(f"Error updating availability for teacher {teacher_id}: {str(e)}")
         return False
 
+
 def get_teacher_availability_status():
     try:
-        # Get all availability records
-        availability_records = list(availability_collection.find({}, {"_id": 0}))
-        
-        # Get teacher information
+        availability_records = list(
+            availability_collection.find({}, {"_id": 0})
+        )
+
         teachers = list(teachers_collection.find({}, {"_id": 0}))
-        teacher_info = {teacher["id"]: teacher for teacher in teachers}
-        
-        # Combine availability with teacher info
+        teacher_info = {t["id"]: t for t in teachers}
+
         result = []
+
         for record in availability_records:
             teacher_id = record.get("teacher_id")
-            teacher_data = teacher_info.get(teacher_id)
-            
-            if teacher_data:
-                result.append({
-                    "teacher_id": teacher_id,
-                    "teacher_name": teacher_data.get("name", "Unknown"),
-                    "teacher_email": teacher_data.get("email", ""),
-                    "unavailable_slots": record.get("slots", []),
-                    "submitted": record.get("submitted", False),
-                    "total_unavailable": len(record.get("slots", []))
-                })
-        
+            teacher = teacher_info.get(teacher_id)
+
+            if not teacher:
+                continue
+
+            current = record.get("current_unavailability", [])
+            authentic = record.get("authentic_unavailability", [])
+
+            result.append({
+                "teacher_id": teacher_id,
+                "teacher_name": teacher.get("name", "Unknown"),
+                "teacher_email": teacher.get("email", ""),
+                "authentic_unavailability": authentic,
+                "current_unavailability": current,
+                "submitted": record.get("submitted", False),
+                "total_unavailable": len(current)
+            })
+
         return {
             "success": True,
             "data": result,
             "total_teachers": len(result)
         }
-        
+
     except Exception as e:
-        return {"success": False, "message": f"Error fetching availability status: {str(e)}"}
+        return {
+            "success": False,
+            "message": f"Error fetching availability status: {str(e)}"
+        }
