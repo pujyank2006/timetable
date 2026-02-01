@@ -100,7 +100,7 @@ def transform_input(input_data=None):
     output.append("end")
 
     try:
-        INPUT_FILE_PATH = "input.txt"
+        INPUT_FILE_PATH = "/tmp/input.txt"
         with open(INPUT_FILE_PATH, "w") as f:
             f.write("\n".join(output))
         print(f"Successfully wrote input file to {INPUT_FILE_PATH}")

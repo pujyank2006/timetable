@@ -19,7 +19,7 @@ def generate_time_table():
         
         # Run the scheduler directly within Flask context (not as subprocess)
         try:
-            config_data = InputData("input.txt")
+            config_data = InputData("/tmp/input.txt")
             scheduler = SchedulerMain(config_data)
             
             # Get the final solution and save it
