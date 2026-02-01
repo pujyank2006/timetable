@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import Header from "../components/Header.jsx";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -132,7 +133,9 @@ export default function InvigulationPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
+        <>
+            <Header />
+            <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-4xl mx-auto px-4">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-slate-800">Assign Invigilators</h1>
@@ -364,5 +367,6 @@ export default function InvigulationPage() {
                 )}
             </div>
         </div>
-    );
+    </>
+  );
 }

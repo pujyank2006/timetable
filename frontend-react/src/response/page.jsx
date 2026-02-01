@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from "react-toastify";
+import Header from "../components/Header.jsx";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -202,27 +203,29 @@ export default function ResponsesPage() {
     const teachers = getTeachersForClass();
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-6xl mx-auto">
-                <h2 className="text-3xl font-semibold mb-6 text-center">Response Details</h2>
+        <>
+            <Header />
+            <div className="min-h-screen bg-gray-100 py-8">
+                <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-6xl mx-auto">
+                    <h2 className="text-3xl font-semibold mb-6 text-center">Response Details</h2>
 
-                {/* Class Selection Dropdown */}
-                <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <label className="block text-base font-semibold mb-3 text-gray-700">
-                        Select Class:
-                    </label>
-                    <select
-                        value={selectedClass}
-                        onChange={(e) => setSelectedClass(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                        {classes.map((className, index) => (
-                            <option key={index} value={className}>
-                                {className}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                    {/* Class Selection Dropdown */}
+                    <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label className="block text-base font-semibold mb-3 text-gray-700">
+                            Select Class:
+                        </label>
+                        <select
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                            {classes.map((className, index) => (
+                                <option key={index} value={className}>
+                                    {className}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                 {/* Teachers Table */}
                 <div className="mt-8">
@@ -462,8 +465,8 @@ export default function ResponsesPage() {
                         </div>
                     </div>
                 </div>
-            )
-            }
-        </div >
-    );
+            )}
+        </div>
+    </>
+  );
 }

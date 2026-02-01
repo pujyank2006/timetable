@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from "react-toastify";
+import Header from "../../components/Header.jsx";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const hours = ["9-10", "10-11", "11-12", "12-1", "2-3", "3-4", "4-5"];
@@ -24,11 +25,11 @@ const styles = {
     cursor: 'pointer',
   },
   selected: { background: '#ff7675', color: 'white' },
-  button: { 
-    marginTop: '20px', 
-    padding: '10px 20px', 
-    fontSize: '16px', 
-    background: '#75afffff', 
+  button: {
+    marginTop: '20px',
+    padding: '10px 20px',
+    fontSize: '16px',
+    background: '#75afffff',
     borderRadius: '20px',
     cursor: 'pointer',
     border: 'none'
@@ -107,14 +108,17 @@ const TeacherAvailability = () => {
   };
 
   return (
-    <div style={styles.body}>
-      <h2>Mark Your NOT-AVAILABLE Hours</h2>
-      <h3>Consider the recently released timetable</h3>
-      {teacherId ? (
-        <p>Teacher ID: <strong>{teacherId}</strong></p>
-      ) : (
-        <p style={{ color: 'red' }}>Loading ID from URL...</p>
-      )}
+    <>
+
+      <div style={styles.body}>
+        <h2>Mark Your NOT-AVAILABLE Hours</h2>
+        <h3>Consider the recently released timetable</h3>
+        {teacherId ? (
+          <p>Teacher ID: <strong>{teacherId}</strong></p>
+        ) : (
+          <p style={{ color: 'red' }}>Loading ID from URL...</p>
+        )}
+      </div>
 
       <div id="container">
         {days.map((dayName, dayIndex) => (
@@ -148,7 +152,7 @@ const TeacherAvailability = () => {
       >
         Submit Availability
       </button>
-    </div>
+    </>
   );
 };
 
