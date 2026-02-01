@@ -11,6 +11,7 @@ import Responses from "./response/page";
 import InvigulationPage from "./invigilation/page";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import GiantTimetablePage from "./gtimetable/page";
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/viewtimetable" element={<ViewTimetablePage />} />
           <Route path="/responses" element={<Responses />} />
           <Route path="/invigilation" element={<InvigulationPage />} />
+          <Route path="/gtimetable" element={<GiantTimetablePage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" />} />

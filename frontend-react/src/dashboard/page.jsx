@@ -162,6 +162,19 @@ export default function Dashboard() {
                                 Clear
                             </button>
                         </div>
+
+                        <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h2 className="text-lg font-semibold mb-2">Click for department timetable</h2>
+                            <p className="text-sm text-slate-500 mb-4">
+                                Select the classes of your department to get giant timetable
+                            </p>
+                            <Link
+                                to="/gtimetable"
+                                className="bg-purple-600 text-white px-4 py-2 rounded-md inline-block text-center"
+                            >
+                                Department timetable
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

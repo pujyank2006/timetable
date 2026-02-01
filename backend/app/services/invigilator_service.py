@@ -51,7 +51,7 @@ def is_teacher_available(teacher_name: str, date: str, exam_time_start: str, exa
             print(f"No availability data found for teacher '{teacher_name}', considering available all the time")
             return True
         
-        unavailable_slots = availability.get("slots", [])
+        unavailable_slots = availability.get("current_unavailability", [])
         
         # Calculate slot number for the exam time
         slot_number = calculate_slot_number(date, exam_time_start)
